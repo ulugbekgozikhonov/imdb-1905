@@ -1,6 +1,7 @@
 from rest_framework import serializers
+from rest_framework.relations import StringRelatedField
 
-from api.models import WatchList, StreamPlatform, Review
+from watchlist_app.models import WatchList, StreamPlatform, Review
 
 
 class StreamPlatformSerializer(serializers.ModelSerializer):
@@ -13,6 +14,10 @@ class StreamPlatformSerializer(serializers.ModelSerializer):
 
 class WatchListSerializer(serializers.ModelSerializer):
 	stream = StreamPlatformSerializer(read_only=True)
+	rating = serializers.ReadOnlyField()
+	rating_count = serializers.ReadOnlyField()
+	created_at = serializers.ReadOnlyField()
+	updated_at = serializers.ReadOnlyField()
 
 	class Meta:
 		model = WatchList
@@ -20,9 +25,9 @@ class WatchListSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-	id = serializers.ReadOnlyField()
-	watchlist = WatchListSerializer(read_only=True)
+	watchlist = StringRelatedField(read_only=True)
+	user = StringRelatedField(read_only=True)
 
 	class Meta:
 		model = Review
-		fields = ["id", "description", "rating", "watchlist"]
+		fields = "__all__"

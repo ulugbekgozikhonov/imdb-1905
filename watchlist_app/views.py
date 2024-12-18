@@ -4,34 +4,23 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.models import StreamPlatform, WatchList, Review
-from api.permessions import IsAdminOrReadOnly
-from api.serializers import StreamPlatformSerializer, WatchListSerializer, ReviewSerializer
+from watchlist_app.models import StreamPlatform, WatchList, Review
+from watchlist_app.permessions import IsAdminOrAuthenticatedForOnlyRead
+from watchlist_app.serializers import StreamPlatformSerializer, WatchListSerializer, ReviewSerializer
 
 
 class WatchListAPIView(generics.ListCreateAPIView):
 	queryset = WatchList.objects.all()
 	serializer_class = WatchListSerializer
-	permission_classes = [IsAdminOrReadOnly]
+	permission_classes = [IsAdminOrAuthenticatedForOnlyRead]
 
 
-# def get(self, request):
-# 	watchlist = WatchList.objects.all()
-# 	serializer = WatchListSerializer(instance=watchlist, many=True)
-# 	return Response(serializer.data)
-#
-# def post(self, request):
-# 	serializer = WatchListSerializer(data=request.data)
-# 	if serializer.is_valid():
-# 		serializer.save()
-# 		return Response(serializer.data, status=status.HTTP_201_CREATED)
-#
-# 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class ReviewAV(generics.CreateAPIView):
-	queryset = Review.objects.all()
+class ReviewAV(generics.ListCreateAPIView):
 	serializer_class = ReviewSerializer
 	permission_classes = [IsAuthenticated]
+
+	def get_queryset(self):
+		return Review.objects.filter(user=self.request.user)
 
 	def perform_create(self, serializer):
 		pk = self.kwargs['pk']

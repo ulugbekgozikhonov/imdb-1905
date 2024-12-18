@@ -25,8 +25,10 @@ INSTALLED_APPS = [
 	'django.contrib.staticfiles',
 	# packages
 	'rest_framework',
+	'rest_framework.authtoken',
 	# locale
-	'api.apps.ApiConfig',
+	'watchlist_app.apps.ApiConfig',
+	'user_app'
 ]
 
 MIDDLEWARE = [
@@ -111,7 +113,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
 	'DEFAULT_PERMISSION_CLASSES': [
 		'rest_framework.permissions.AllowAny',
-	]
+	],
+	'DEFAULT_AUTHENTICATION_CLASSES': [
+		'rest_framework.authentication.TokenAuthentication',
+	],
 }
 
 LOGIN_REDIRECT_URL = '/watchlist/'

@@ -22,7 +22,7 @@ class WatchList(BaseModel):
 	title = models.CharField(max_length=100)
 	description = models.TextField()
 	year = models.PositiveIntegerField()
-	rating = models.FloatField()
+	rating = models.FloatField(default=0)
 	rating_count = models.PositiveIntegerField(default=0)
 	stream = models.ForeignKey(StreamPlatform, on_delete=models.PROTECT,
 	                           null=True, related_name='watchlist')
